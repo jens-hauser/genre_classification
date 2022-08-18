@@ -44,9 +44,9 @@ def go(config: DictConfig):
             "main",
             parameters={
                 "input_artifact": "raw_data.parquet:latest",
-                "artifact_name": "preprocessed_data.parquet",
+                "artifact_name": "preprocessed_data.csv",
                 "artifact_type": "preprocessed_data",
-                "artifact_description": "Preprocessed data"
+                "artifact_description": "Data with preprocessing applied"
             },
         )
 
@@ -57,7 +57,7 @@ def go(config: DictConfig):
             "main",
             parameters={
                 "reference_artifact": config["data"]["reference_dataset"],
-                "sample_artifact": "preprocessed_data.parquet:latest",
+                "sample_artifact": "preprocessed_data.csv:latest",
                 "ks_alpha": config["data"]["ks_alpha"],
             },
         )
@@ -68,11 +68,10 @@ def go(config: DictConfig):
             os.path.join(root_path, "segregate"),
             "main",
             parameters={
-                "input_artifact": "preprocessed_data.parquet:latest",
+                "input_artifact": "preprocessed_data.csv:latest",
                 "artifact_root": "data",
                 "artifact_type": "segregated_data",
                 "test_size": config["data"]["test_size"],
-                "random_state": config["main"]["random_state"],
                 "stratify": config["data"]["stratify"]
             },
         )
@@ -92,7 +91,7 @@ def go(config: DictConfig):
                 "train_data": "data_train.csv:latest",
                 "model_config": model_config,
                 "export_artifact": config["random_forest_pipeline"]["export_artifact"],
-                "random_seed": config["main"]["random_state"],
+                "random_seed": config["main"]["random_seed"],
                 "val_size": config["data"]["val_size"],
                 "stratify": config["data"]["stratify"],
             },
